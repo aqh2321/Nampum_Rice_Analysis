@@ -7,7 +7,7 @@ from Bio.SeqRecord import SeqRecord
 #get into the folder stored all the files
 #print('current directory is', os.getcwd())
 #new_d = input('type the directory for original fq files:')
-os.system('mkdir sam_files')
+os.system('mkdir intermediate_files')
 #path = os.getcwd()+'/'+str(new_d)+'/'
 path = sys.argv[1]
 directory = os.fsencode(path)
@@ -60,6 +60,6 @@ for file in os.listdir(directory):
     os.system('bwa/bwa aln ref.fasta %s_kmer.fasta > %s_kmer.sai' % (sample_name,sample_name))
     os.system('bwa/bwa samse ref.fasta %s_kmer.sai %s_kmer.fasta > aln_%s_kmer.sam' % (sample_name,sample_name,sample_name))
 
-os.system('mv *.sai sam_files')
-os.system('mv *kmer.fasta sam_files')
+os.system('mv *.sai intermediate_files')
+os.system('mv *kmer.fasta intermediate_files')
 # don't move sam files until analysisindel2.py is run

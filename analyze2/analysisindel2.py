@@ -84,7 +84,10 @@ for file in os.listdir(directory):
         print(leaf_name, 'finish creating dataframe')
 # this is the original form of output
 output = pd.concat(frames,ignore_index = True)
-output.to_csv('high_c_indel_count_from_sam_files_ordered_by_plants.csv',index = False)
+#find the largest number in wt first, set this as a threshold to filter out cross contamination
+max_count_inwt = max(output.loc[(output['name']=='WT') & (output['real_pam_seq'] != 'wt')]['count'])
+output['count'].where(output['count']>max_count_inwt,0,inplace = True)
+output.to_csv('w_t_high_c_indel_count_from_sam_files_ordered_by_plants.csv',index = False)
 
 # transform the sheet so that the diversity analysis pipeline can accept
 reindex = output.groupby(['protospacer', 'real_pam_seq']).size()
@@ -93,6 +96,7 @@ frames2 = []
 for frame in frames:
     output_array = []
     name = frame['name'].unique()[0]
+    frame['count'].where(frame['count']>max_count_inwt,0,inplace = True)
     for i in range(reindex_df.shape[0]):
         find = False
         for j in range(frame.shape[0]):
@@ -107,12 +111,11 @@ for frame in frames:
     frames2.append(df_reformd)
 
 df_final = reduce(lambda left,right: pd.merge(left,right,on='type'), frames2)
-
 titles = ['type','WT','WT_0.25rxn','1A','1A_0.25rxn','1B','2A','2A_0.25rxn','2B','3A','3A_0.25rxn','3B','4B','4C','5A','5B','6A','6B','7A','7B','8A','8B','9A','9B','10A','10B',\
          '11A','11B','13A','13B','14A','14B','15D','16A','16B','17A','17B','18A','18B','19A','19B','20A','20B',\
          '21A','21B']
 # output for diversity analysis pipeline
 df_final = df_final.reindex(columns=titles)
-df_final.to_csv('high_c_indel_count_from_sam_files_ordered_by_mutation_types.csv',index = False)
+df_final.to_csv('w_t_high_c_indel_count_from_sam_files_ordered_by_mutation_types.csv',index = False)
 os.system('mkdir samfiles')
 os.system('mv *.sam samfiles')
