@@ -1,8 +1,7 @@
 '''
 This script intends to analyze the rearrangement of sequence data with 7 protospacer
-To run this script, type "python master.py files.txt" and make sure all the original fq
+Before running the script, please check the helper menu with "python master.py -h" first
 files are in the same folder
-Path identification is optional
 '''
 import os,sys
 from time import process_time

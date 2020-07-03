@@ -4,8 +4,7 @@ Pipelines to analyze rearrangement and indel mutations around CRISPR cut sites
 code runs with python 3.7.7
 
 **important package to be installed**   
-[biopython 1.73](https://biopython.org/wiki/Download) its dependencies
-This project also used [bwa](https://github.com/lh3/bwa). This tool is already set up in the module.
+[biopython 1.73](https://biopython.org/wiki/Download), [bwa](https://github.com/lh3/bwa) and their dependencies
 
 **command**  
 To open the help menu:
