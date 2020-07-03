@@ -30,7 +30,6 @@ for file in os.listdir(directory):
     seq_bank_to_align = {}
     filename = os.fsdecode(file)
     sample_name = filename.rpartition('.')[0][5:]
-    print(filename, sample_name)
     #read all seqs in a file
     records = list(SeqIO.parse(path+filename, "fastq"))
 

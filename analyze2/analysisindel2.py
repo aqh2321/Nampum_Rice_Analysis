@@ -28,7 +28,7 @@ def unwanted_labels(element):
         return False
 
 p_bank = {'p1':238,'p2':744,'p3':941,'p4':1277,'p5':1366,'p6':1402,'p7':1497}
-wt_bank = {'p1':"CACAACGACG",'p2':"GCTACGTACG",'p3':"CGGGGAATCT",'p4':"GGTGGGCCCG",'p5':'ACGCGGACCC','p6':'CCCACGTTGC','p7':'CACATGTTTT'}
+wt_bank = {'p1':"CACAACGACG",'p2':"GCTACGTACG",'p3':"CGGGGAATCT",'p4':"GGTGGGCCCG",'p5':'CGCGAACGCG','p6':'CCCACGTTGC','p7':'CACATGTTTT'}
 
 acceptable_index_range = {key: {key+'start': val-perfect_match_requirement+1, key+'end': val-1}  for key, val in p_bank.items()}
 specific_index_range = {key: val-5 for key, val in p_bank.items()}
