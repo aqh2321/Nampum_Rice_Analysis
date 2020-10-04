@@ -3,12 +3,12 @@
 # In[ ]:
 import os,sys
 from analyze1.Supporter import get_pair,sumlist,flipFR,simplify,flipnum,flip,flipmultiple
-file = sys.argv[1]
+file_name = sys.argv[1]
 
 #SECTION_4
 #a) wt
-with open('%s.txt'%file) as f:
-    with open('%s_output.txt'%file, "w") as output:
+with open('%s.txt'%file_name) as f:
+    with open('%s_output.txt'%file_name, "w") as output:
         names = []
         ids = []
         position = []
@@ -38,4 +38,4 @@ with open('%s.txt'%file) as f:
             elif len(actual) > 2:
                 writing = flipmultiple(actual)
                 output.write("%s ! %s\n" % (str(writing), name))
-        print('\n$_$ finish section3: rearrangement searching for %s' %file)
+        print('\n$_$ finish section3: rearrangement searching for %s' %file_name)

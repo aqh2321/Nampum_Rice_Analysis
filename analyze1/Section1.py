@@ -8,6 +8,8 @@ time_start = process_time()
 #print('\n$_$finish section1: building protospacer dictionary\n')
 file_name = 'Chr3 extraction_04242019.fasta'
 record = list(SeqIO.parse(file_name, "fasta"))
+path = sys.argv[1]
+directory = os.fsencode(path)
 
 LF = {} #LEFT FORWARD
 LR = {} #LEFT REVERSE
@@ -48,15 +50,17 @@ print('======finish building protospacer libriary======')
 
 '''SECTION_2'''
 
-files = open(sys.argv[1])#file name
 
 os.system('mkdir SECTION_2')
 os.system('mkdir SECTION_3')
 
-for file in files:
+for file in os.listdir(directory):
+    filename = os.fsdecode(file)
+    sample_name = filename.rpartition('.')[0][5:]
     time_start_ = process_time()
-    with open('%s.fq'%file[:-1]) as read: ###have/n at the end
-        with open('%s.txt'%file[:-1],'w') as report:
+    print(filename,sample_name)
+    with open(path+filename) as read: ###have/n at the end
+        with open('%s.txt'%sample_name,'w') as report:
             for title,seq,qual in FastqGeneralIterator(read):
                 fqid = title
                 fqlenth = len(seq)
@@ -79,15 +83,12 @@ for file in files:
                     n += 1
     print('\n$_$ finish section2: per sequence analysis for %s' %file[:-1])
     time_finish_ = process_time()
-    os.system('python -m analyze1.Section3 '+file)
-    print('======finish analyzing ',file,'takes',time_finish_-time_start_,'======\n')
+    os.system('python -m analyze1.Section3 '+sample_name)
+    print('======finish analyzing ',sample_name,'takes',time_finish_-time_start_,'======\n')
 print('======start to write output files======')
-files.close()
 
-os.system('python -m analyze1.Section4 '+sys.argv[1])
+os.system('python -m analyze1.Section4 '+path)
 time_finish = process_time()
 print('Anlysis took', time_finish-time_start)
 
-#os.system('mv *.fq fqfiles')
-#os.system('mv *output.txt SECTION_3')
-os.system('mv NHLC*.txt SECTION_2')
+os.system('mv *.txt SECTION_3')

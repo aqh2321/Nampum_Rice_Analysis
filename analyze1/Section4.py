@@ -9,11 +9,14 @@ sortprep = []
 types = []
 finaldictlist = []
 name = []
-files = open(sys.argv[1])#filenames
+path = sys.argv[1]
+directory = os.fsencode(path)
 
-for file in files:
-    with open('%s_output.txt'%file[:-1]) as counting:
-        name.append(file[:-1])
+for file in os.listdir(directory):
+    filename = os.fsdecode(file)
+    sample_name = filename.rpartition('.')[0][5:]
+    with open('%s_output.txt'%sample_name) as counting:
+        name.append(sample_name)
         analysis = {}
         analysis = defaultdict(int)
         for line in counting:
@@ -26,11 +29,10 @@ for file in files:
         sortprep.sort()
         finaldictlist.append(analysis)
 
-files.close()
 
 finallist = listsort(types, sortprep)
 
-workbook = xlsxwriter.Workbook('report.xlsx')
+workbook = xlsxwriter.Workbook('report_test.xlsx')
 worksheet = workbook.add_worksheet()
 
 col = 0

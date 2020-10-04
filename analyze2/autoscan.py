@@ -3,12 +3,17 @@
 import os,sys
 from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
+from analyze2.tdf_processing import runcmd
 
 #get into the folder stored all the files
 #print('current directory is', os.getcwd())
 #new_d = input('type the directory for original fq files:')
 os.system('mkdir intermediate_files')
 #path = os.getcwd()+'/'+str(new_d)+'/'
+#make genome file for later tdf file creation
+os.system('$cut -f1,2 ref.fasta.fai > ref.chrom.sizes')
+os.system('cp ref.chrom.sizes /home/nuozhang/anaconda3/share/igvtools-2.5.3-0/lib/genomes')
+
 path = sys.argv[1]
 directory = os.fsencode(path)
 
@@ -64,7 +69,15 @@ for file in os.listdir(directory):
 
     os.system('bwa/bwa aln ref.fasta %s_kmer.fasta > %s_kmer.sai' % (sample_name,sample_name))
     os.system('bwa/bwa samse ref.fasta %s_kmer.sai %s_kmer.fasta > aln_%s_kmer.sam' % (sample_name,sample_name,sample_name))
+    #generate tdfs
+    runcmd("aln_"+sample_name+'_kmer')
+
 
 os.system('mv *.sai intermediate_files')
+os.system('mv *.bam intermediate_files')
+os.system('mv *.bai intermediate_files')
 os.system('mv *kmer.fasta intermediate_files')
+os.system('mkdir tdfs')
+os.system('mv *.tdf tdfs')
+
 # don't move sam files until analysisindel.py is run

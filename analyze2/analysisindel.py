@@ -52,8 +52,11 @@ frames = []
 for file in os.listdir(directory):
     filename = os.fsdecode(file)
     #read all seqs in a file
+    #if filename.endswith("rmdup.sorted.sam"):
     if filename.endswith(".sam"):
         leaf_name = filename.rpartition('_')[0][4:]
+        #change skiprows to 1 if use rmdup files, 2 if use original sam files
+        #df = pd.read_csv('%s_rmdup.sorted.sam'%leaf_name,skiprows = 1,delim_whitespace=True,header=None, index_col=None,names =  ['QNAME','FLAG','RNAME','POS','MAPQ','CIGAR','RNEXT','PNEXT','TLEN','SEQ','QUAL','M1','M2','M3','M4','M5','M6','M7','M8','M9'])
         df = pd.read_csv('aln_%s_kmer.sam'%leaf_name,skiprows = 2,delim_whitespace=True,header=None, index_col=None,names =  ['QNAME','FLAG','RNAME','POS','MAPQ','CIGAR','RNEXT','PNEXT','TLEN','SEQ','QUAL','M1','M2','M3','M4','M5','M6','M7','M8','M9'])
         df = df.iloc[:, : 10]
         df['protospacer'] = 'Null'
@@ -84,10 +87,12 @@ for file in os.listdir(directory):
         print(leaf_name, 'finish creating dataframe')
 # this is the original form of output
 output = pd.concat(frames,ignore_index = True)
+'''
 #find the largest number in wt first, set this as a threshold to filter out cross contamination
 max_count_inwt = max(output.loc[(output['name']=='WT') & (output['real_pam_seq'] != 'wt')]['count'])
-output['count'].where(output['count']>max_count_inwt,0,inplace = True)
-output.to_csv('w_t_indel_count_from_sam_files_ordered_by_plants.csv',index = False)
+output['count'].where(output['count']>=max_count_inwt,0,inplace = True)
+'''
+output.to_csv('indel_count_from_sam_files_ordered_by_plants.csv',index = False)
 
 # transform the sheet so that the diversity analysis pipeline can accept
 reindex = output.groupby(['protospacer', 'real_pam_seq']).size()
@@ -96,7 +101,9 @@ frames2 = []
 for frame in frames:
     output_array = []
     name = frame['name'].unique()[0]
+    '''
     frame['count'].where(frame['count']>max_count_inwt,0,inplace = True)
+    '''
     for i in range(reindex_df.shape[0]):
         find = False
         for j in range(frame.shape[0]):
@@ -117,6 +124,6 @@ titles = ['type','WT','WT_0.25rxn','1A','1A_0.25rxn','1B','2A','2A_0.25rxn','2B'
          '21A','21B']
 # output for diversity analysis pipeline
 df_final = df_final.reindex(columns=titles)
-df_final.to_csv('w_t_indel_count_from_sam_files_ordered_by_mutation_types.csv',index = False)
+df_final.to_csv('indel_count_from_sam_files_ordered_by_mutation_types.csv',index = False)
 os.system('mkdir samfiles')
-os.system('mv *.sam samfiles')
+#os.system('mv *.sam samfiles')
