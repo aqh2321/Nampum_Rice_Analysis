@@ -1,4 +1,5 @@
 '''please make sure bwa and biopython are installed correctly'''
+'''This script generates sam files and tdf files'''
 
 import os,sys
 from Bio import SeqIO
@@ -6,14 +7,14 @@ from Bio.SeqRecord import SeqRecord
 from analyze2.tdf_processing import runcmd
 
 #get into the folder stored all the files
-#print('current directory is', os.getcwd())
-#new_d = input('type the directory for original fq files:')
 os.system('mkdir intermediate_files')
-#path = os.getcwd()+'/'+str(new_d)+'/'
 #make genome file for later tdf file creation
+'''if you want to enable tdf generation, install igvtools and find where
+igv tools store genomes, and copy and replace the path here in line 16, and unmute line 74
+
 os.system('$cut -f1,2 ref.fasta.fai > ref.chrom.sizes')
 os.system('cp ref.chrom.sizes /home/nuozhang/anaconda3/share/igvtools-2.5.3-0/lib/genomes')
-
+'''
 path = sys.argv[1]
 directory = os.fsencode(path)
 
@@ -36,6 +37,7 @@ for file in os.listdir(directory):
     filename = os.fsdecode(file)
     sample_name = filename.rpartition('.')[0][5:]
     #read all seqs in a file
+    print(path+filename)
     records = list(SeqIO.parse(path+filename, "fastq"))
 
     kmer_for_alignment = open('%s_kmer.fasta'%sample_name,'w')
@@ -49,8 +51,6 @@ for file in os.listdir(directory):
             for i in range(0, avg_seq_length, end_site):
                 seq_bank_to_align[record.description][i] = record.seq[i:i+end_site]
                 #seq_bank_to_align[record.description].append(record.seq[i:i+25])
-        elif length_of_seq < end_site:
-                pass
         else:
             #print('length of the current sequence is shorter than expected (150bp), last %f seqs are ignored' \
             #% (150-length_of_seq))
@@ -65,13 +65,14 @@ for file in os.listdir(directory):
             shorten_seq = SeqRecord(value_, id = new_record_id+'_'+str(key_))
             SeqIO.write(shorten_seq, kmer_for_alignment, 'fasta')
     kmer_for_alignment.close()
-    print(sample_name,'finish')
+    print(sample_name,'finish creating kmers')
 
     os.system('bwa/bwa aln ref.fasta %s_kmer.fasta > %s_kmer.sai' % (sample_name,sample_name))
     os.system('bwa/bwa samse ref.fasta %s_kmer.sai %s_kmer.fasta > aln_%s_kmer.sam' % (sample_name,sample_name,sample_name))
-    #generate tdfs
+    '''
+    #generate tdfs if needed
     runcmd("aln_"+sample_name+'_kmer')
-
+    '''
 
 os.system('mv *.sai intermediate_files')
 os.system('mv *.bam intermediate_files')

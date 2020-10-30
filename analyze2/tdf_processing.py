@@ -1,3 +1,5 @@
+'''This script generates tdf files from sam files,
+    so that patterns can be observed through igvtools'''
 import os
 
 def runcmd(name_of_file):

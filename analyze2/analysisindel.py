@@ -1,5 +1,11 @@
 '''please make sure bwa and biopython are installed correctly'''
-# a demo for single file analysis is available in jupyter notebook
+'''a demo for single file analysis is available in jupyter notebook (handle_sam.jpynb)
+    This script demonstrates how indels are counted
+    custumed parts:
+    line 36 are indexes of protospacers;
+    line 37 are specific wt sequences;
+    line 129 are names of the leaves.
+'''
 
 import os,sys
 import pandas as pd
@@ -84,16 +90,17 @@ for file in os.listdir(directory):
         new_df = new_df[new_df.real_pam_seq != 'Null']
         new_df['name'] = leaf_name
         frames.append(new_df)
-        print(leaf_name, 'finish creating dataframe')
+        print(leaf_name, 'finish creating indel dataframe')
 # this is the original form of output
 output = pd.concat(frames,ignore_index = True)
 '''
 #find the largest number in wt first, set this as a threshold to filter out cross contamination
+#if you want to use this function, unmute line 99, 100 and line 112
 max_count_inwt = max(output.loc[(output['name']=='WT') & (output['real_pam_seq'] != 'wt')]['count'])
 output['count'].where(output['count']>=max_count_inwt,0,inplace = True)
 '''
 output.to_csv('indel_count_from_sam_files_ordered_by_plants.csv',index = False)
-
+print('please wait, another format of dataframe is being generated')
 # transform the sheet so that the diversity analysis pipeline can accept
 reindex = output.groupby(['protospacer', 'real_pam_seq']).size()
 reindex_df = reindex.to_frame(name = 'occurence').reset_index()
@@ -113,17 +120,17 @@ for frame in frames:
         if not find:
             output_array.append([reindex_df.iloc[i]['protospacer']+reindex_df.iloc[i]['real_pam_seq'],0])
     reformed = np.asarray(output_array)
-    df_reformd = pd.DataFrame(reformed,columns=['type','count'])
+    df_reformd = pd.DataFrame(reformed,columns=['Type','count'])
     df_reformd.rename(columns={'count': name},inplace=True)
     frames2.append(df_reformd)
 
-df_final = reduce(lambda left,right: pd.merge(left,right,on='type'), frames2)
+df_final = reduce(lambda left,right: pd.merge(left,right,on='Type'), frames2)
 
-titles = ['type','WT','WT_0.25rxn','1A','1A_0.25rxn','1B','2A','2A_0.25rxn','2B','3A','3A_0.25rxn','3B','4B','4C','5A','5B','6A','6B','7A','7B','8A','8B','9A','9B','10A','10B',\
+titles = ['Type','WT','WT_0.25rxn','1A','1A_0.25rxn','1B','2A','2A_0.25rxn','2B','3A','3A_0.25rxn','3B','4B','4C','5A','5B','6A','6B','7A','7B','8A','8B','9A','9B','10A','10B',\
          '11A','11B','13A','13B','14A','14B','15D','16A','16B','17A','17B','18A','18B','19A','19B','20A','20B',\
          '21A','21B']
 # output for diversity analysis pipeline
 df_final = df_final.reindex(columns=titles)
 df_final.to_csv('indel_count_from_sam_files_ordered_by_mutation_types.csv',index = False)
 os.system('mkdir samfiles')
-#os.system('mv *.sam samfiles')
+os.system('mv *.sam samfiles')

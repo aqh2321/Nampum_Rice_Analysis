@@ -44,6 +44,5 @@ with open(file+'.fq') as read: ###replace with files ends in A/B/C/D
 print('\n$_$ finish section2: per sequence analysis\n')
 
 '''GO TO SECTION_3 and 4'''
-#section 3 only contains functions
 #os.sys('mkdir SECTION_4')
 #os.sys('python Section4.py '+file)

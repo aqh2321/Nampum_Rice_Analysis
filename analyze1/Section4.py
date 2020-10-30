@@ -32,7 +32,7 @@ for file in os.listdir(directory):
 
 finallist = listsort(types, sortprep)
 
-workbook = xlsxwriter.Workbook('report_test.xlsx')
+workbook = xlsxwriter.Workbook('report_rearrangement.xlsx')
 worksheet = workbook.add_worksheet()
 
 col = 0
@@ -61,4 +61,5 @@ for i in range(len(name)):
 
 workbook.close()
 
-print("======finish writing all the documents======")
+print("======finish writing excel sheet for rearrangement mutations======")
+print("======proceed to label addition and frequency analysis======")
