@@ -33,15 +33,17 @@ if args.m == 1:
     #os.system('mkdir fqfiles')
     os.system('python -m analyze1.Section1 '+ path_to_raw_data)
 
-
-    print('start stage 2 analysis')
-
-    if args.c:
-        os.system('python -m analyze2.autoscan2 '+path_to_raw_data+' '+str(args.l)+' '+str(args.avg))
-        os.system('python -m analyze2.analysisindel2 '+os.getcwd()+' '+str(args.l))
+    start_stage2 = input('start stage 2 indel analysis?[y/n]:')
+    if start_stage2 == 'y':
+        print('start indel analysis')
+        if args.c:
+            os.system('python -m analyze2.autoscan2 '+path_to_raw_data+' '+str(args.l)+' '+str(args.avg))
+            os.system('python -m analyze2.analysisindel2 '+os.getcwd()+' '+str(args.l))
+        else:
+            os.system('python -m analyze2.autoscan '+path_to_raw_data+' '+str(args.l)+' '+str(args.avg))
+            os.system('python -m analyze2.analysisindel '+os.getcwd()+' '+str(args.l))
     else:
-        os.system('python -m analyze2.autoscan '+path_to_raw_data+' '+str(args.l)+' '+str(args.avg))
-        os.system('python -m analyze2.analysisindel '+os.getcwd()+' '+str(args.l))
+        print('finished rearrangement analysis')
 
 elif args.m == 2:
     print('jump to stage 2 analysis')

@@ -35,9 +35,11 @@ os.system("bwa/bwa index ref.fasta")
 for file in os.listdir(directory):
     seq_bank_to_align = {}
     filename = os.fsdecode(file)
-    sample_name = filename.rpartition('.')[0][5:]
+    sample_name = filename.rpartition('_')[0]
+
+    #sample_name = filename.rpartition('.')[0][5:]
     #read all seqs in a file
-    print(path+filename)
+    #print(path+filename)
     records = list(SeqIO.parse(path+filename, "fastq"))
 
     kmer_for_alignment = open('%s_kmer.fasta'%sample_name,'w')
@@ -69,10 +71,10 @@ for file in os.listdir(directory):
 
     os.system('bwa/bwa aln ref.fasta %s_kmer.fasta > %s_kmer.sai' % (sample_name,sample_name))
     os.system('bwa/bwa samse ref.fasta %s_kmer.sai %s_kmer.fasta > aln_%s_kmer.sam' % (sample_name,sample_name,sample_name))
-    '''
+
     #generate tdfs if needed
     runcmd("aln_"+sample_name+'_kmer')
-    '''
+
 
 os.system('mv *.sai intermediate_files')
 os.system('mv *.bam intermediate_files')

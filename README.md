@@ -4,18 +4,20 @@ Pipelines to analyze rearrangement and indel mutations around CRISPR cut sites
 code runs with python 3.7.7
 
 **important package to be installed**   
-[biopython 1.73](https://biopython.org/wiki/Download), [bwa](https://github.com/lh3/bwa) and their dependencies
+[biopython 1.73](https://biopython.org/wiki/Download), [bwa](https://github.com/lh3/bwa),  [seqkit](https://bioinf.shenwei.me/seqkit/), [igvtools](https://software.broadinstitute.org/software/igv/igvtools_commandline) or install [igvtools](https://anaconda.org/bioconda/igvtools) through conda
 
 **command**  
 To open the help menu:
 ```
 python master.py -h
 ```
+**considering the large raw data, instead of raw_data folder, please switch to fq_rmdup folder in the command**
 To run the entire project:
 ```
 python master.py raw_data
 ```
 To run rearrangement analysis alone:
+if want to continue to do indel analysis, enter ```y``` in the popped window, or ```n``` to exit.
 ```
 python master.py raw_data --m=1
 ```

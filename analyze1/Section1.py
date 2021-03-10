@@ -56,7 +56,10 @@ os.system('mkdir SECTION_3')
 
 for file in os.listdir(directory):
     filename = os.fsdecode(file)
-    sample_name = filename.rpartition('.')[0][5:]
+    sample_name = filename.rpartition('_')[0]
+    print(sample_name)
+
+    #sample_name = filename.rpartition('.')[0][5:]
     time_start_ = process_time()
     with open(path+filename) as read: ###have/n at the end
         with open('%s.txt'%sample_name,'w') as report:
@@ -84,6 +87,7 @@ for file in os.listdir(directory):
     time_finish_ = process_time()
     os.system('python -m analyze1.Section3 '+sample_name)
     print('======finish analyzing ',sample_name,'takes',time_finish_-time_start_,'======\n')
+
 print('======start to write output files======')
 
 os.system('python -m analyze1.Section4 '+path)

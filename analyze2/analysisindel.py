@@ -12,6 +12,8 @@ import pandas as pd
 import numpy as np
 from functools import reduce
 import re
+from analyze2.tdf_processing import runcmd
+
 #get into the folder stored all the files
 
 
@@ -60,11 +62,15 @@ for file in os.listdir(directory):
     #read all seqs in a file
     #if filename.endswith("rmdup.sorted.sam"):
     if filename.endswith(".sam"):
+        #leaf_name = filename[:-17]
+        print(leaf_name)
         leaf_name = filename.rpartition('_')[0][4:]
         #change skiprows to 1 if use rmdup files, 2 if use original sam files
         #df = pd.read_csv('%s_rmdup.sorted.sam'%leaf_name,skiprows = 1,delim_whitespace=True,header=None, index_col=None,names =  ['QNAME','FLAG','RNAME','POS','MAPQ','CIGAR','RNEXT','PNEXT','TLEN','SEQ','QUAL','M1','M2','M3','M4','M5','M6','M7','M8','M9'])
         df = pd.read_csv('aln_%s_kmer.sam'%leaf_name,skiprows = 2,delim_whitespace=True,header=None, index_col=None,names =  ['QNAME','FLAG','RNAME','POS','MAPQ','CIGAR','RNEXT','PNEXT','TLEN','SEQ','QUAL','M1','M2','M3','M4','M5','M6','M7','M8','M9'])
         df = df.iloc[:, : 10]
+        #for duplicated sam files
+        #runcmd('%s_rmdup.sorted'%leaf_name)
         df['protospacer'] = 'Null'
         unique_labels = list(df.CIGAR.unique())
         possible_indel_rows = df.loc[df['CIGAR'].apply(unwanted_labels) != False]
@@ -126,8 +132,8 @@ for frame in frames:
 
 df_final = reduce(lambda left,right: pd.merge(left,right,on='Type'), frames2)
 
-titles = ['Type','WT','WT_0.25rxn','1A','1A_0.25rxn','1B','2A','2A_0.25rxn','2B','3A','3A_0.25rxn','3B','4B','4C','5A','5B','6A','6B','7A','7B','8A','8B','9A','9B','10A','10B',\
-         '11A','11B','13A','13B','14A','14B','15D','16A','16B','17A','17B','18A','18B','19A','19B','20A','20B',\
+titles = ['Type','WT','WT_0.25rxn','WT1A','WT2A','WT3A','1A','1A_0.25rxn','1B','1C','2A','2A_0.25rxn','2B','3A','3A_0.25rxn','3B','4B','4C','5A','5B','5C','6A','6B','7A','7B','7C','8A','8B','9A','9B','10A','10B',\
+         '11A','11B','13A','13B','14A','14B','15D','16A','16B','16C','17A','17B','17C','18A','18B','19A','19B','20A','20B','20C'\
          '21A','21B']
 # output for diversity analysis pipeline
 df_final = df_final.reindex(columns=titles)
