@@ -11,7 +11,8 @@ To open the help menu:
 ```
 python master.py -h
 ```
-**considering the large raw data, instead of raw_data folder, please switch to fq_rmdup folder in the command**
+**considering the large raw data, instead of raw_data folder, please switch to fq_rmdup folder in the command**  
+please Download the new files with duplicates removed through [google_drive](https://drive.google.com/file/d/1tIpMmEEspo4TAkHv1L00cC-XOf0B0Lzu/view?usp=sharing)
 To run the entire project:
 ```
 python master.py raw_data
